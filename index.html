@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>La Mie Dorée — Artisan Bakery</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --cream: #F7F0E3;
+      --warm-white: #FDF8F0;
+      --gold: #C8902A;
+      --deep-brown: #2C1A0E;
+      --mid-brown: #5C3D1E;
+      --light-tan: #E8D5B0;
+      --charcoal: #1A1208;
+      --rust: #A0522D;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Jost', sans-serif;
+      background: var(--cream);
+      color: var(--deep-brown);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* Custom Cursor */
+    .cursor {
+      width: 12px; height: 12px;
+      background: var(--gold);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      transition: transform 0.15s ease, width 0.2s, height 0.2s;
+      transform: translate(-50%, -50%);
+    }
+    .cursor-ring {
+      width: 36px; height: 36px;
+      border: 1px solid var(--gold);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9998;
+      transition: transform 0.35s ease, width 0.2s, height 0.2s, opacity 0.2s;
+      transform: translate(-50%, -50%);
+      opacity: 0.5;
+    }
+    body:hover .cursor { opacity: 1; }
+
+    /* Grain Overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.035;
+      pointer-events: none;
+      z-index: 9997;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.6rem 4rem;
+      mix-blend-mode: multiply;
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--deep-brown);
+      font-weight: 300;
+    }
+    .nav-links { display: flex; gap: 2.5rem; }
+    .nav-links a {
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--mid-brown);
+      font-weight: 300;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 8rem 3rem 6rem 4rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-tag {
+      font-size: 0.65rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 400;
+      margin-bottom: 1.8rem;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.3s ease forwards;
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.8rem, 6vw, 7.5rem);
+      font-weight: 300;
+      line-height: 1.0;
+      color: var(--deep-brown);
+      opacity: 0;
+      animation: fadeUp 1s 0.5s ease forwards;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .hero-sub {
+      margin-top: 2.2rem;
+      font-size: 0.85rem;
+      font-weight: 200;
+      letter-spacing: 0.08em;
+      line-height: 1.9;
+      color: var(--mid-brown);
+      max-width: 340px;
+      opacity: 0;
+      animation: fadeUp 1s 0.75s ease forwards;
+    }
+
+    .hero-cta {
+      margin-top: 3rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      opacity: 0;
+      animation: fadeUp 1s 1s ease forwards;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      background: var(--deep-brown);
+      color: var(--cream);
+      padding: 1rem 2.4rem;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.3s, color 0.3s;
+      font-weight: 300;
+    }
+    .btn-primary:hover {
+      background: var(--gold);
+      color: var(--warm-white);
+    }
+
+    .scroll-hint {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--mid-brown);
+      font-weight: 300;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .scroll-hint::before {
+      content: '';
+      width: 30px; height: 1px;
+      background: var(--gold);
+      display: block;
+    }
+
+    .hero-right {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-img-wrap {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      animation: fadeIn 1.4s 0.4s ease forwards;
+    }
+
+    /* Bakery visual using CSS art */
+    .hero-visual {
+      width: 100%;
+      height: 100%;
+      background: var(--light-tan);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-visual::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 40% at 70% 60%, #D4956A55 0%, transparent 70%),
+        radial-gradient(ellipse 80% 80% at 30% 30%, #F0C99055 0%, transparent 60%),
+        linear-gradient(160deg, #E8C99A 0%, #D4884A 50%, #8B3A0F 100%);
+    }
+
+    .hero-visual::after {
+      content: '🍞';
+      position: absolute;
+      font-size: 14rem;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      filter: drop-shadow(0 30px 60px rgba(44,26,14,0.4));
+      animation: float 6s ease-in-out infinite;
+    }
+
+    /* Floating bread emoji alternative: big elegant illustration text */
+    .bread-illustration {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .bread-glyph {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22rem;
+      line-height: 0.85;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(255,255,255,0.2);
+      font-style: italic;
+      font-weight: 300;
+      user-select: none;
+      animation: float 7s ease-in-out infinite;
+    }
+
+    .hero-badge {
+      position: absolute;
+      bottom: 3rem;
+      right: 3rem;
+      width: 100px; height: 100px;
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: spin 20s linear infinite;
+    }
+    .hero-badge-text {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.52rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    /* Year strip */
+    .year-strip {
+      position: absolute;
+      bottom: 3rem;
+      left: 3rem;
+      z-index: 2;
+    }
+    .year-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 6rem;
+      font-weight: 300;
+      color: rgba(44,26,14,0.08);
+      line-height: 1;
+      user-select: none;
+    }
+
+    /* ── MARQUEE ── */
+    .marquee-section {
+      background: var(--deep-brown);
+      padding: 1.2rem 0;
+      overflow: hidden;
+    }
+    .marquee-track {
+      display: flex;
+      gap: 3rem;
+      animation: marquee 25s linear infinite;
+      white-space: nowrap;
+    }
+    .marquee-item {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      font-style: italic;
+      color: var(--light-tan);
+      letter-spacing: 0.1em;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-shrink: 0;
+    }
+    .marquee-item::after {
+      content: '✦';
+      color: var(--gold);
+      font-style: normal;
+      font-size: 0.6rem;
+    }
+
+    /* ── ABOUT ── */
+    .about {
+      padding: 9rem 4rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8rem;
+      align-items: center;
+    }
+
+    .section-label {
+      font-size: 0.62rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 400;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .section-label::before {
+      content: '';
+      width: 24px; height: 1px;
+      background: var(--gold);
+    }
+
+    .about-heading {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 3.5vw, 4rem);
+      font-weight: 300;
+      line-height: 1.15;
+      color: var(--deep-brown);
+    }
+    .about-heading em { font-style: italic; color: var(--gold); }
+
+    .about-text {
+      margin-top: 2rem;
+      font-size: 0.88rem;
+      font-weight: 200;
+      line-height: 2;
+      color: var(--mid-brown);
+      max-width: 420px;
+    }
+
+    .about-stats {
+      margin-top: 3.5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    .stat-block { border-top: 1px solid var(--light-tan); padding-top: 1.2rem; }
+    .stat-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.8rem;
+      font-weight: 300;
+      color: var(--deep-brown);
+    }
+    .stat-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--mid-brown);
+      font-weight: 300;
+      margin-top: 0.3rem;
+    }
+
+    .about-visual {
+      position: relative;
+      height: 560px;
+    }
+
+    .about-card {
+      position: absolute;
+      border-radius: 0;
+    }
+
+    .about-card-main {
+      width: 78%;
+      height: 80%;
+      right: 0; top: 0;
+      background: linear-gradient(135deg, #C8902A 0%, #8B5E1E 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9rem;
+      box-shadow: 20px 20px 60px rgba(44,26,14,0.25);
+    }
+
+    .about-card-accent {
+      width: 55%;
+      height: 48%;
+      left: 0; bottom: 0;
+      background: var(--deep-brown);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .about-card-accent .quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-style: italic;
+      color: var(--light-tan);
+      line-height: 1.5;
+      text-align: center;
+    }
+    .about-card-accent .quote-author {
+      margin-top: 1rem;
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 300;
+    }
+
+    /* ── MENU ── */
+    .menu-section {
+      padding: 7rem 4rem;
+      background: var(--warm-white);
+    }
+
+    .menu-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 5rem;
+    }
+
+    .menu-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 4vw, 4.5rem);
+      font-weight: 300;
+      line-height: 1.05;
+      color: var(--deep-brown);
+    }
+
+    .menu-tabs {
+      display: flex;
+      gap: 0;
+    }
+    .tab {
+      padding: 0.7rem 1.6rem;
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-weight: 300;
+      border: 1px solid var(--light-tan);
+      background: transparent;
+      color: var(--mid-brown);
+      cursor: none;
+      transition: all 0.3s;
+    }
+    .tab:not(:first-child) { border-left: none; }
+    .tab.active, .tab:hover {
+      background: var(--deep-brown);
+      color: var(--cream);
+      border-color: var(--deep-brown);
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+
+    .menu-card {
+      background: var(--cream);
+      padding: 2.8rem 2.4rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.4s ease;
+    }
+    .menu-card::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 100%; height: 3px;
+      background: var(--gold);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+    .menu-card:hover { transform: translateY(-4px); }
+    .menu-card:hover::before { transform: scaleX(1); }
+
+    .menu-card-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+      display: block;
+    }
+    .menu-card-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 400;
+      color: var(--deep-brown);
+      margin-bottom: 0.6rem;
+    }
+    .menu-card-desc {
+      font-size: 0.78rem;
+      font-weight: 200;
+      line-height: 1.8;
+      color: var(--mid-brown);
+      margin-bottom: 1.5rem;
+    }
+    .menu-card-price {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      font-weight: 300;
+      color: var(--gold);
+    }
+    .menu-card-tag {
+      position: absolute;
+      top: 1.5rem; right: 1.5rem;
+      font-size: 0.55rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      border: 1px solid var(--gold);
+      padding: 0.3rem 0.7rem;
+      font-weight: 400;
+    }
+
+    /* ── HOURS ── */
+    .hours-section {
+      padding: 7rem 4rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      background: var(--deep-brown);
+      position: relative;
+      overflow: hidden;
+    }
+    .hours-section::before {
+      content: '';
+      position: absolute;
+      top: -5rem; right: -5rem;
+      width: 400px; height: 400px;
+      border: 1px solid rgba(200,144,42,0.15);
+      border-radius: 50%;
+    }
+    .hours-section::after {
+      content: '';
+      position: absolute;
+      top: -2rem; right: -2rem;
+      width: 250px; height: 250px;
+      border: 1px solid rgba(200,144,42,0.1);
+      border-radius: 50%;
+    }
+
+    .hours-left .section-label { color: var(--gold); }
+    .hours-left .section-label::before { background: var(--gold); }
+
+    .hours-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 3.5vw, 4rem);
+      font-weight: 300;
+      line-height: 1.1;
+      color: var(--cream);
+      margin-bottom: 2.5rem;
+    }
+
+    .hours-table { width: 100%; }
+    .hours-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(232,213,176,0.12);
+    }
+    .hours-day {
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--light-tan);
+      font-weight: 300;
+    }
+    .hours-time {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      color: var(--cream);
+      font-weight: 300;
+    }
+    .hours-closed { color: rgba(232,213,176,0.3) !important; }
+
+    .hours-right { display: flex; flex-direction: column; justify-content: center; }
+
+    .location-block { margin-bottom: 3rem; }
+    .location-label {
+      font-size: 0.62rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 400;
+      margin-bottom: 1rem;
+    }
+    .location-address {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 300;
+      color: var(--cream);
+      line-height: 1.6;
+    }
+
+    .contact-links { display: flex; flex-direction: column; gap: 0.8rem; }
+    .contact-link {
+      font-size: 0.78rem;
+      font-weight: 200;
+      color: var(--light-tan);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      transition: color 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .contact-link::before {
+      content: '→';
+      color: var(--gold);
+      font-size: 0.7rem;
+    }
+    .contact-link:hover { color: var(--gold); }
+
+    /* ── TESTIMONIALS ── */
+    .testimonials {
+      padding: 8rem 4rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .testimonials::before {
+      content: '"';
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 30rem;
+      color: var(--light-tan);
+      position: absolute;
+      top: -4rem;
+      left: 50%;
+      transform: translateX(-50%);
+      line-height: 1;
+      pointer-events: none;
+      opacity: 0.4;
+    }
+
+    .testimonials-inner { position: relative; z-index: 1; }
+
+    .testimonial-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3rem;
+      margin-top: 5rem;
+    }
+
+    .testimonial-card {
+      text-align: left;
+      padding: 2.5rem;
+      border: 1px solid var(--light-tan);
+      position: relative;
+    }
+
+    .testimonial-stars {
+      color: var(--gold);
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      margin-bottom: 1.5rem;
+    }
+    .testimonial-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.7;
+      color: var(--deep-brown);
+      margin-bottom: 1.5rem;
+    }
+    .testimonial-author {
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--mid-brown);
+      font-weight: 400;
+    }
+
+    /* ── NEWSLETTER ── */
+    .newsletter {
+      background: linear-gradient(135deg, #2C1A0E 0%, #5C3D1E 100%);
+      padding: 7rem 4rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .newsletter::before {
+      content: '';
+      position: absolute;
+      inset: 2rem;
+      border: 1px solid rgba(200,144,42,0.2);
+      pointer-events: none;
+    }
+    .newsletter-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 3vw, 3.5rem);
+      font-weight: 300;
+      color: var(--cream);
+      margin-bottom: 1rem;
+    }
+    .newsletter-sub {
+      font-size: 0.82rem;
+      font-weight: 200;
+      color: var(--light-tan);
+      letter-spacing: 0.08em;
+      margin-bottom: 3rem;
+    }
+    .newsletter-form {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .newsletter-input {
+      flex: 1;
+      padding: 1rem 1.5rem;
+      background: rgba(247,240,227,0.1);
+      border: 1px solid rgba(200,144,42,0.4);
+      border-right: none;
+      color: var(--cream);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 200;
+      letter-spacing: 0.08em;
+      outline: none;
+    }
+    .newsletter-input::placeholder { color: rgba(232,213,176,0.4); }
+    .newsletter-btn {
+      padding: 1rem 2rem;
+      background: var(--gold);
+      border: none;
+      color: var(--deep-brown);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-weight: 400;
+      cursor: none;
+      transition: background 0.3s;
+    }
+    .newsletter-btn:hover { background: var(--cream); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--charcoal);
+      padding: 3rem 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-style: italic;
+      color: var(--light-tan);
+      font-weight: 300;
+    }
+    .footer-copy {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(232,213,176,0.3);
+      font-weight: 300;
+    }
+    .footer-social { display: flex; gap: 1.5rem; }
+    .footer-social a {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(232,213,176,0.4);
+      text-decoration: none;
+      font-weight: 300;
+      transition: color 0.3s;
+    }
+    .footer-social a:hover { color: var(--gold); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes float {
+      0%, 100% { transform: translate(-50%, -50%) translateY(0); }
+      50% { transform: translate(-50%, -50%) translateY(-18px); }
+    }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.35s; }
+  </style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursor-ring"></div>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">La Mie Dorée</div>
+    <div class="nav-links">
+      <a href="#menu">Menu</a>
+      <a href="#about">Our Story</a>
+      <a href="#hours">Visit</a>
+      <a href="#newsletter">Order</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-left">
+      <div class="hero-tag">Est. 2009 · Paris-Inspired</div>
+      <h1 class="hero-title">Baked with<br><em>patience</em><br>& love.</h1>
+      <p class="hero-sub">
+        Handcrafted sourdoughs, viennoiseries, and seasonal pastries made fresh every morning before the sun rises.
+      </p>
+      <div class="hero-cta">
+        <a href="#menu" class="btn-primary">Explore Menu</a>
+        <div class="scroll-hint">Scroll to discover</div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-img-wrap">
+        <div class="hero-visual">
+          <div class="bread-illustration">
+            <span class="bread-glyph">B</span>
+          </div>
+          <div class="hero-badge">
+            <div class="hero-badge-text">Artisan<br>·<br>Organic<br>·<br>Fresh</div>
+          </div>
+        </div>
+      </div>
+      <div class="year-strip"><div class="year-number">2009</div></div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-section">
+    <div class="marquee-track">
+      <span class="marquee-item">Sourdough Loaves</span>
+      <span class="marquee-item">Croissants au Beurre</span>
+      <span class="marquee-item">Pain au Chocolat</span>
+      <span class="marquee-item">Brioche Feuilletée</span>
+      <span class="marquee-item">Seasonal Tarts</span>
+      <span class="marquee-item">Cinnamon Morning Buns</span>
+      <span class="marquee-item">Rye & Seed Loaves</span>
+      <span class="marquee-item">Mille-feuille</span>
+      <span class="marquee-item">Sourdough Loaves</span>
+      <span class="marquee-item">Croissants au Beurre</span>
+      <span class="marquee-item">Pain au Chocolat</span>
+      <span class="marquee-item">Brioche Feuilletée</span>
+      <span class="marquee-item">Seasonal Tarts</span>
+      <span class="marquee-item">Cinnamon Morning Buns</span>
+      <span class="marquee-item">Rye & Seed Loaves</span>
+      <span class="marquee-item">Mille-feuille</span>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <div class="reveal">
+      <div class="section-label">Our Story</div>
+      <h2 class="about-heading">Flour, time,<br>and <em>tradition.</em></h2>
+      <p class="about-text">
+        La Mie Dorée was born from a single obsession: the perfect loaf. We use stone-milled heritage grains, long cold ferments, and wood-fired ovens to create bread the way it was meant to be made — slowly, with care.
+      </p>
+      <p class="about-text" style="margin-top:1rem;">
+        Every morning before dawn, our bakers shape the doughs that have been resting overnight. By the time the city wakes, the aroma of fresh bread already fills the street.
+      </p>
+      <div class="about-stats">
+        <div class="stat-block">
+          <div class="stat-number">15+</div>
+          <div class="stat-label">Years of baking</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-number">40+</div>
+          <div class="stat-label">Items daily</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-number">100%</div>
+          <div class="stat-label">Organic flour</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-number">4AM</div>
+          <div class="stat-label">First bake</div>
+        </div>
+      </div>
+    </div>
+    <div class="about-visual reveal reveal-delay-2">
+      <div class="about-card about-card-main">🥐</div>
+      <div class="about-card about-card-accent">
+        <p class="quote">"Good bread is the most fundamentally satisfying of all foods."</p>
+        <p class="quote-author">— James Beard</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MENU -->
+  <section class="menu-section" id="menu">
+    <div class="menu-header reveal">
+      <div>
+        <div class="section-label">Fresh Daily</div>
+        <h2 class="menu-title">Our<br>Signature<br>Creations</h2>
+      </div>
+      <div class="menu-tabs">
+        <button class="tab active">Breads</button>
+        <button class="tab">Pastries</button>
+        <button class="tab">Seasonal</button>
+      </div>
+    </div>
+    <div class="menu-grid">
+      <div class="menu-card reveal">
+        <span class="menu-card-icon">🍞</span>
+        <div class="menu-card-tag">Signature</div>
+        <h3 class="menu-card-name">Country Sourdough</h3>
+        <p class="menu-card-desc">72-hour cold ferment, stone-milled wheat & rye blend. A crackling crust with an open, chewy crumb.</p>
+        <div class="menu-card-price">From $9</div>
+      </div>
+      <div class="menu-card reveal reveal-delay-1">
+        <span class="menu-card-icon">🥐</span>
+        <div class="menu-card-tag">Bestseller</div>
+        <h3 class="menu-card-name">Beurrage Croissant</h3>
+        <p class="menu-card-desc">27 hand-rolled layers of French AOP butter. Shatteringly crisp, ribbon-soft inside.</p>
+        <div class="menu-card-price">$4.50</div>
+      </div>
+      <div class="menu-card reveal reveal-delay-2">
+        <span class="menu-card-icon">🍫</span>
+        <h3 class="menu-card-name">Pain au Chocolat</h3>
+        <p class="menu-card-desc">Valrhona 66% dark chocolate batons tucked in laminated dough. Warm from the oven until noon.</p>
+        <div class="menu-card-price">$5</div>
+      </div>
+      <div class="menu-card reveal">
+        <span class="menu-card-icon">🌾</span>
+        <h3 class="menu-card-name">Ancient Grain Loaf</h3>
+        <p class="menu-card-desc">Einkorn, emmer & spelt. Nutty, complex, deeply nutritious. Sliced or whole.</p>
+        <div class="menu-card-price">From $12</div>
+      </div>
+      <div class="menu-card reveal reveal-delay-1">
+        <span class="menu-card-icon">🥧</span>
+        <div class="menu-card-tag">Seasonal</div>
+        <h3 class="menu-card-name">Honey Walnut Tart</h3>
+        <p class="menu-card-desc">Crisp pâte sablée, caramel-roasted walnuts, wildflower honey. Limited daily.</p>
+        <div class="menu-card-price">$7</div>
+      </div>
+      <div class="menu-card reveal reveal-delay-2">
+        <span class="menu-card-icon">🧁</span>
+        <h3 class="menu-card-name">Morning Bun</h3>
+        <p class="menu-card-desc">Laminated dough, orange zest, cinnamon sugar. Rolled, coiled, baked golden in a muffin tin.</p>
+        <div class="menu-card-price">$4</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials">
+    <div class="testimonials-inner">
+      <div class="section-label" style="justify-content:center; margin-bottom:1rem;">
+        What people say
+      </div>
+      <h2 class="menu-title reveal" style="font-family:'Cormorant Garamond',serif; font-size:clamp(2.5rem,4vw,4rem); font-weight:300;">
+        Loved by the neighborhood.
+      </h2>
+      <div class="testimonial-grid">
+        <div class="testimonial-card reveal">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"I moved to this neighborhood solely because of this bakery. Their sourdough is the best I've had outside of San Francisco."</p>
+          <div class="testimonial-author">— Marie L., Regular since 2015</div>
+        </div>
+        <div class="testimonial-card reveal reveal-delay-1">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"The croissants are absolutely transcendent. Arrive early — they're gone by 9am on weekends and worth every second of the queue."</p>
+          <div class="testimonial-author">— Thomas B., Food Writer</div>
+        </div>
+        <div class="testimonial-card reveal reveal-delay-2">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"We order their bread for every event. The ancient grain loaf has become part of our family's story. Simply irreplaceable."</p>
+          <div class="testimonial-author">— Priya K., Event Host</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOURS & LOCATION -->
+  <section class="hours-section" id="hours">
+    <div class="hours-left reveal">
+      <div class="section-label">Plan your visit</div>
+      <h2 class="hours-title">Opening<br>Hours</h2>
+      <table class="hours-table">
+        <tr class="hours-row">
+          <td class="hours-day">Monday – Friday</td>
+          <td class="hours-time">7:00 AM – 6:00 PM</td>
+        </tr>
+        <tr class="hours-row">
+          <td class="hours-day">Saturday</td>
+          <td class="hours-time">7:00 AM – 4:00 PM</td>
+        </tr>
+        <tr class="hours-row">
+          <td class="hours-day">Sunday</td>
+          <td class="hours-time">8:00 AM – 2:00 PM</td>
+        </tr>
+        <tr class="hours-row">
+          <td class="hours-day">Public Holidays</td>
+          <td class="hours-time hours-closed">Closed</td>
+        </tr>
+      </table>
+    </div>
+    <div class="hours-right reveal reveal-delay-2">
+      <div class="location-block">
+        <div class="location-label">Find Us</div>
+        <div class="location-address">
+          42 Rue du Blé Doré<br>
+          Brooklyn, New York<br>
+          NY 11201
+        </div>
+      </div>
+      <div class="contact-links">
+        <a href="tel:+12125550192" class="contact-link">+1 (212) 555-0192</a>
+        <a href="mailto:hello@lamiedoree.com" class="contact-link">hello@lamiedoree.com</a>
+        <a href="#" class="contact-link">Order for pickup online</a>
+        <a href="#" class="contact-link">Wholesale enquiries</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <section class="newsletter" id="newsletter">
+    <div class="section-label" style="justify-content:center; color:var(--gold); margin-bottom:1.5rem;">
+      Stay in the know
+    </div>
+    <h2 class="newsletter-title reveal">Fresh updates,<br>straight to you.</h2>
+    <p class="newsletter-sub reveal">Seasonal specials, new arrivals & early access to weekend pre-orders.</p>
+    <div class="newsletter-form reveal">
+      <input type="email" class="newsletter-input" placeholder="your@email.com" />
+      <button class="newsletter-btn">Subscribe</button>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">La Mie Dorée</div>
+    <div class="footer-copy">© 2025 La Mie Dorée. All rights reserved.</div>
+    <div class="footer-social">
+      <a href="#">Instagram</a>
+      <a href="#">Facebook</a>
+      <a href="#">Pinterest</a>
+    </div>
+  </footer>
+
+  <script>
+    // Custom cursor
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursor-ring');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      cursor.style.left = mx + 'px';
+      cursor.style.top = my + 'px';
+    });
+
+    function animateRing() {
+      rx += (mx - rx) * 0.12;
+      ry += (my - ry) * 0.12;
+      ring.style.left = rx + 'px';
+      ring.style.top = ry + 'px';
+      requestAnimationFrame(animateRing);
+    }
+    animateRing();
+
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    reveals.forEach(r => obs.observe(r));
+
+    // Menu tabs (visual only)
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
